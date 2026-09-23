@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Painel de LED · Espaço Rodobens | iCasas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0e0f11; --card:#15171b; --card2:#1a1d22; --line:#262a31;
+  --txt:#f2f4f6; --mut:#97a1ab; --mut2:#6b7480;
+  --verde:#57ac6e; --azul:#4ca8d8; --laranja:#ed8036;
+  --asfalto:#23262c; --faixa:#d9dde2;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:calc(64px + env(safe-area-inset-top,0px))}
+body{background:var(--bg);color:var(--txt);font:400 16px/1.6 Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;-webkit-font-smoothing:antialiased;padding-bottom:env(safe-area-inset-bottom,0px)}
+h1,h2,h3,.num{font-family:"Space Grotesk",Inter,system-ui,sans-serif;letter-spacing:-.02em}
+a{color:var(--azul)}
+.wrap{max-width:760px;margin:0 auto;padding:0 20px}
+
+/* header */
+header{position:sticky;top:0;z-index:10;background:rgba(14,15,17,.88);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px)}
+header .wrap{display:flex;align-items:center;justify-content:space-between;height:56px}
+.marca{display:flex;align-items:center;gap:10px;font:700 18px "Space Grotesk",sans-serif}
+.marca i{display:flex;gap:3px}
+.marca i b{width:6px;height:18px;border-radius:2px;display:block}
+.marca i b:nth-child(1){background:var(--verde)}.marca i b:nth-child(2){background:var(--azul)}.marca i b:nth-child(3){background:var(--laranja)}
+header small{color:var(--mut);font-size:13px}
+#progress{position:absolute;left:0;bottom:-1px;height:2px;width:0;background:linear-gradient(90deg,var(--verde),var(--azul),var(--laranja))}
+
+section{padding:56px 0;border-bottom:1px solid var(--line)}
+section:last-of-type{border-bottom:0}
+.tag{display:inline-flex;align-items:center;gap:8px;color:var(--mut);font-size:14px;margin-bottom:14px}
+.tag::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c,var(--azul))}
+h1{font-size:clamp(34px,8.5vw,56px);line-height:1.05;font-weight:700}
+h2{font-size:clamp(26px,6vw,36px);line-height:1.15;margin-bottom:14px}
+h3{font-size:18px;margin-bottom:6px}
+p{color:var(--mut);max-width:62ch}
+p+p{margin-top:12px}
+strong{color:var(--txt);font-weight:600}
+
+/* hero */
+.hero{padding-top:44px}
+.hero p.end{margin-top:18px;font-size:15px}
+.hero .lead{margin-top:18px;font-size:18px;color:var(--txt)}
+.resumo{margin-top:32px;display:grid;grid-template-columns:1fr;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.resumo div{padding:22px 22px 24px;background:var(--card)}
+.resumo div+div{border-top:1px solid var(--line)}
+.resumo .num{font-size:clamp(48px,14vw,64px);font-weight:700;line-height:1;margin-bottom:6px}
+.resumo span{color:var(--mut);font-size:15px}
+.resumo .num span{color:inherit;font-size:inherit}
+@media(min-width:640px){.resumo{grid-template-columns:repeat(3,1fr)}.resumo .num{font-size:40px}.resumo div+div{border-top:0;border-left:1px solid var(--line)}}
+
+/* corte da via */
+.corte{margin-top:28px;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:var(--card)}
+.faixa{display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;padding:18px 18px;position:relative;background:var(--asfalto)}
+.faixa+.faixa{border-top:2px dashed #4a4f58}
+.faixa.canteiro{background:#1b2a1f;padding:8px 18px;border-top:0}
+.faixa.canteiro span{color:#6f9a7a;font-size:13px}
+.faixa h3{margin:0;font-size:16px}
+.faixa p{font-size:14px;margin-top:2px}
+.faixa .vol{text-align:right}
+.faixa .vol .num{font-size:22px;font-weight:700;display:block}
+.faixa .vol small{color:var(--mut);font-size:12px}
+.fluxo{position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--c)}
+.loja{display:flex;align-items:center;gap:14px;padding:18px;background:#0f3b2a}
+.loja .led{flex:none;width:64px;height:40px;border-radius:4px;background:linear-gradient(135deg,var(--verde),var(--azul),var(--laranja));box-shadow:0 0 24px rgba(76,168,216,.45)}
+.loja h3{margin:0;font-size:16px}
+.loja p{color:#b8d4c5;font-size:14px;margin:0}
+.legenda{padding:14px 18px;font-size:13px;color:var(--mut);border-top:1px solid var(--line)}
+
+/* números */
+.grid2{display:grid;gap:12px;margin-top:24px}
+@media(min-width:640px){.grid2{grid-template-columns:1fr 1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+.card .num{font-size:clamp(40px,11vw,48px);font-weight:700;line-height:1.05;margin:6px 0 8px}
+.card p{font-size:14px}
+
+/* tabela */
+.tabela{margin-top:24px;overflow-x:auto;border:1px solid var(--line);border-radius:14px}
+table{width:100%;border-collapse:collapse;min-width:420px;font-size:15px}
+th,td{padding:14px 16px;text-align:left}
+th{color:var(--mut);font-weight:500;font-size:13px;background:var(--card2)}
+td{border-top:1px solid var(--line)}
+td.n{font-family:"Space Grotesk",sans-serif;font-weight:700;white-space:nowrap;font-size:18px}
+tr.dest td.n{font-size:22px}
+tr.dest td{background:rgba(76,168,216,.08)}
+
+/* método */
+.passos{list-style:none;margin-top:22px;counter-reset:p}
+.passos li{counter-increment:p;position:relative;padding:0 0 22px 44px}
+.passos li::before{content:counter(p);position:absolute;left:0;top:0;width:28px;height:28px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;font:700 14px "Space Grotesk",sans-serif;color:var(--azul)}
+.passos li:not(:last-child)::after{content:"";position:absolute;left:14px;top:32px;bottom:4px;width:1px;background:var(--line)}
+.passos p{font-size:15px}
+.fontes{margin-top:8px;font-size:13px;color:var(--mut2)}
+
+/* vídeo */
+.video{margin:22px auto 0;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:#000;aspect-ratio:9/16;width:min(100%,360px,calc(80vh * 9 / 16))}
+.video video{width:100%;height:100%;object-fit:cover;display:block}
+
+/* fatores */
+.lista{margin-top:20px;display:grid;gap:10px}
+.lista div{display:grid;grid-template-columns:10px 1fr;gap:14px;padding:16px 18px;background:var(--card);border:1px solid var(--line);border-radius:12px}
+.lista div::before{content:"";width:10px;height:10px;border-radius:50%;margin-top:7px;background:var(--c)}
+.lista p{font-size:15px}
+
+.fim{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:28px 22px;margin-top:8px}
+.fim h2{margin-bottom:10px}
+.fim .marca{margin-top:22px}
+footer{padding:28px 0 40px;color:var(--mut2);font-size:13px;text-align:center}
+
+:focus-visible{outline:2px solid var(--azul);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="marca"><i><b></b><b></b><b></b></i>iCasas</div>
+    <small>Estudo de audiência</small>
+  </div>
+  <div id="progress"></div>
+</header>
+
+<main class="wrap">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="tag" style="--c:var(--verde)">Proposta · Painel de LED na fachada</div>
+  <h1>Espaço Rodobens, de frente para a Washington Luís</h1>
+  <p class="lead">Quantas pessoas vão ver o painel instalado na fachada, voltado para a marginal e para a rodovia SP-310.</p>
+  <p class="end">Av. Marginal Comendador Vicente Filizola, 5020 · Vila Redentora · São José do Rio Preto / SP · 15015-450</p>
+
+  <div class="resumo">
+    <div><div class="num"><span class="count" data-to="46">0</span> mil</div><span>veículos passam por dia em frente à loja</span></div>
+    <div><div class="num"><span class="count" data-to="40">0</span> mil</div><span>pessoas veem o painel por dia</span></div>
+    <div><div class="num">1,2 milhão</div><span>de visualizações por mês</span></div>
+  </div>
+</section>
+
+<!-- O PONTO -->
+<section>
+  <div class="tag">O ponto</div>
+  <h2>Um corredor regional, não uma rua de bairro</h2>
+  <p>A Marginal Vicente Filizola acompanha a <strong>Rodovia Washington Luís (SP-310)</strong> no trecho urbano de Rio Preto, na região do aeroporto e do Recinto de Exposições. É o eixo que liga Rio Preto a Mirassol e recebe o fluxo que chega da capital e de Catanduva.</p>
+  <p>Na prática, o painel fala com três públicos ao mesmo tempo: quem circula na marginal (tráfego local, mais lento), quem passa pela rodovia no sentido da fachada e, com visibilidade parcial, quem vem no sentido oposto.</p>
+  <p>O trecho está recebendo obras da Ecovias Noroeste Paulista, com terceiras faixas e novas marginais, cujo objetivo declarado é separar o tráfego local do de longa distância. Quando concluídas, a tendência é <strong>mais carros locais passando pela marginal</strong>, justamente na frente da loja.</p>
+</section>
+
+<!-- CORTE DA VIA -->
+<section>
+  <div class="tag" style="--c:var(--laranja)">Quem passa na frente</div>
+  <h2>O corte da via em frente ao Espaço Rodobens</h2>
+  <p>Quantos veículos passam por dia em cada faixa, e como cada um vê o painel.</p>
+
+  <div class="corte" role="figure" aria-label="Corte esquemático da via com volume de veículos por faixa">
+    <div class="faixa" style="--c:#6b7480">
+      <span class="fluxo"></span>
+      <div><h3>Pista oposta da SP-310</h3><p>Vê o painel de relance, pelo canteiro</p></div>
+      <div class="vol"><span class="num">20 mil</span><small>veículos/dia</small></div>
+    </div>
+    <div class="faixa canteiro"><span>Canteiro central</span></div>
+    <div class="faixa" style="--c:var(--azul)">
+      <span class="fluxo"></span>
+      <div><h3>Pista da SP-310, lado da loja</h3><p>Vê o painel de frente</p></div>
+      <div class="vol"><span class="num">20 mil</span><small>veículos/dia</small></div>
+    </div>
+    <div class="faixa canteiro"><span>Separação</span></div>
+    <div class="faixa" style="--c:var(--verde)">
+      <span class="fluxo"></span>
+      <div><h3>Marginal Vicente Filizola</h3><p>Passa devagar, bem na frente da loja</p></div>
+      <div class="vol"><span class="num">6 mil</span><small>veículos/dia</small></div>
+    </div>
+    <div class="loja">
+      <div class="led" aria-hidden="true"></div>
+      <div><h3>Fachada Espaço Rodobens</h3><p>Painel de LED voltado para a via</p></div>
+    </div>
+    <div class="legenda">Total: 46 mil veículos por dia. Descontando quem só vê de relance, cerca de 28 mil veículos enxergam o painel de verdade.</div>
+  </div>
+</section>
+
+<!-- NÚMEROS -->
+<section>
+  <div class="tag" style="--c:var(--verde)">Audiência</div>
+  <h2>Os números do ponto</h2>
+  <div class="grid2">
+    <div class="card"><h3>Passam na frente</h3><div class="num">46 mil</div><p>Veículos por dia, somando rodovia e marginal.</p></div>
+    <div class="card"><h3>Veem o painel</h3><div class="num">40 mil</div><p>Pessoas por dia, contando motorista e passageiros.</p></div>
+    <div class="card"><h3>Por mês</h3><div class="num">1,2 milhão</div><p>De visualizações. Cada vez que alguém passa e vê o painel conta uma.</p></div>
+    <div class="card"><h3>Por ano</h3><div class="num">14 milhões</div><p>De visualizações em 12 meses de painel ligado.</p></div>
+  </div>
+</section>
+
+<!-- PROJEÇÃO -->
+<section>
+  <div class="tag">Projeção</div>
+  <h2>Quantas visualizações o painel acumula</h2>
+  <div class="tabela">
+    <table>
+      <thead><tr><th>Período</th><th>Visualizações</th></tr></thead>
+      <tbody>
+        <tr><td>1 dia</td><td class="n">40 mil</td></tr>
+        <tr><td>1 semana</td><td class="n">280 mil</td></tr>
+        <tr class="dest"><td>1 mês</td><td class="n">1,2 milhão</td></tr>
+        <tr><td>3 meses</td><td class="n">3,5 milhões</td></tr>
+        <tr><td>6 meses</td><td class="n">7 milhões</td></tr>
+        <tr><td>12 meses</td><td class="n">14 milhões</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="margin-top:14px;font-size:14px">Números arredondados para baixo. Não incluem dias de evento no Recinto de Exposições.</p>
+</section>
+
+<!-- VÍDEO -->
+<section>
+  <div class="tag" style="--c:var(--laranja)">Simulação</div>
+  <h2>O painel em funcionamento</h2>
+  <div class="video">
+    <video src="video-painel.mp4" autoplay loop muted playsinline preload="auto" aria-label="Simulação do painel de LED em funcionamento"></video>
+  </div>
+</section>
+
+<!-- MÉTODO -->
+<section>
+  <div class="tag">Metodologia</div>
+  <h2>Como chegamos nesses números</h2>
+  <p>Não existe contagem oficial publicada para este ponto específico. A estimativa foi montada a partir de referências públicas da região, sempre pelo lado conservador.</p>
+  <ol class="passos">
+    <li><h3>Comparação com a BR-153</h3><p>A BR-153 dentro de Rio Preto recebe cerca de 35 mil veículos por dia, segundo a concessionária. A Washington Luís, no mesmo perímetro, tem movimento parecido.</p></li>
+    <li><h3>Tráfego de viagem</h3><p>Nos feriados, a Ecovias registra perto de 90 mil veículos no trecho Catanduva, Rio Preto e Mirassol. Isso conta só quem viaja. Quem vai e volta todo dia entre Rio Preto e Mirassol entra por cima.</p></li>
+    <li><h3>Divisão por faixa</h3><p>Separamos o movimento entre as duas pistas da rodovia e a marginal, que recebe menos carros por atender só o acesso local.</p></li>
+    <li><h3>Quem realmente vê</h3><p>Contamos integralmente quem passa pela marginal, a maior parte de quem vem na pista do lado da loja e só uma parte de quem vem no sentido oposto.</p></li>
+    <li><h3>De veículos para pessoas</h3><p>Em média, cada carro leva 1,4 pessoa. Multiplicamos isso pelos dias de cada período.</p></li>
+  </ol>
+  <p class="fontes">Fontes: Diário da Região (VDM BR-153), Ecovias Noroeste Paulista via O Regional e Gazeta de Rio Preto (operações de feriado 2025–2026), Prefeitura de Rio Preto (obras da SP-310).</p>
+</section>
+
+<!-- FATORES -->
+<section>
+  <div class="tag" style="--c:var(--verde)">Leitura do ponto</div>
+  <h2>O que favorece e o que limita</h2>
+  <div class="lista">
+    <div style="--c:var(--verde)"><p><strong>Público regional.</strong> Além de Rio Preto, o painel alcança motoristas de Mirassol, Catanduva e da região, que dificilmente passariam por uma loja de bairro.</p></div>
+    <div style="--c:var(--verde)"><p><strong>Horários de pico longos.</strong> Congestionamento nas manhãs e fins de tarde aumenta o tempo de exposição de cada motorista.</p></div>
+    <div style="--c:var(--verde)"><p><strong>Picos de evento.</strong> Proximidade do aeroporto e do Recinto de Exposições gera fluxo extra em datas de feira e shows, não incluído na estimativa.</p></div>
+    <div style="--c:var(--laranja)"><p><strong>Velocidade na rodovia.</strong> Na pista, a leitura dura poucos segundos. O conteúdo precisa ser curto: marca, uma oferta, uma chamada.</p></div>
+    <div style="--c:var(--laranja)"><p><strong>Obras em andamento.</strong> Tapumes e desvios podem reduzir a visibilidade temporariamente. Vale confirmar o cronograma do trecho antes da instalação.</p></div>
+  </div>
+</section>
+
+<!-- CONCLUSÃO -->
+<section>
+  <div class="fim">
+    <div class="tag" style="--c:var(--azul)">Conclusão</div>
+    <h2>Um dos pontos de maior alcance da cidade</h2>
+    <p>Com uma estimativa conservadora, o painel entrega mais de <strong>1 milhão de visualizações por mês</strong>, com um público que combina tráfego local e regional. O ponto justifica o investimento em painel de LED na fachada.</p>
+    <div class="marca"><i><b></b><b></b><b></b></i>iCasas</div>
+  </div>
+</section>
+
+</main>
+
+<footer>iCasas · Estudo de audiência · Espaço Rodobens, Av. Marginal Comendador Vicente Filizola, 5020 · Setembro de 2026</footer>
+
+<script>
+const bar=document.getElementById('progress');
+addEventListener('scroll',()=>{
+  const h=document.documentElement;
+  bar.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';
+},{passive:true});
+
+const reduz=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const cio=new IntersectionObserver(es=>es.forEach(e=>{
+  if(!e.isIntersecting)return;cio.unobserve(e.target);
+  const el=e.target,to=+el.dataset.to;
+  if(reduz){el.textContent=to;return;}
+  const t0=performance.now(),dur=900;
+  (function f(t){const p=Math.min((t-t0)/dur,1);
+    el.textContent=Math.round(to*(1-Math.pow(1-p,3)));
+    if(p<1)requestAnimationFrame(f);})(t0);
+}),{threshold:.5});
+document.querySelectorAll('.count').forEach(el=>cio.observe(el));
+</script>
+</body>
+</html>
